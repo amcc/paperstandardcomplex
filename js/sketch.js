@@ -6,15 +6,15 @@ let circumference;
 let desiredLength;
 
 const radDivisions = 14;
-const stringWeight = 2;
+const stringWidth = 0.8;
 const stringGap = 8;
 
 let phase = 0;
 let wobble = 0;
-const wobbleInc = 0.017;
+const wobbleInc = 0.019;
 const phaseInc = 0.0001;
 const zoffInc = 0.0006;
-const circleNumber = 200;
+const circleNumber = 170;
 
 // let
 //  taken from paper.js docs http://paperjs.org/tutorials/getting-started/using-javascript-directly/
@@ -28,24 +28,6 @@ window.onload = function () {
   let height = paper.view.size.height;
 
   desiredLength = Math.min(width, height) * 2.2;
-
-  //your paper initial conditions here
-
-  var myPath = new paper.Path();
-  myPath.strokeColor = "black";
-  myPath.add(new Point(50, 75));
-  myPath.add(new Point(100, 25));
-  myPath.add(new Point(150, 75));
-
-  // Close the path:
-  myPath.closed = true;
-
-  // pen1 = new Path.Circle({
-  //   center: [100, 100],
-  //   radius: 300,
-  //   strokeColor: "black",
-  //   fillColor: "black",
-  // });
 
   makeCircle(width, height, wobble, true);
   view.onFrame = function (event) {
@@ -108,6 +90,7 @@ const makeCircle = (width, height, wobble, close = false) => {
   }
   var myPath = new paper.Path();
   myPath.strokeColor = "black";
+  myPath.strokeWidth = stringWidth;
 
   // p5.scale(desiredLength / circumference);
   // p5.beginShape();
