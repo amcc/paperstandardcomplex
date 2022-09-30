@@ -16,6 +16,9 @@ const phaseInc = 0.0001;
 const zoffInc = 0.0006;
 const circleNumber = 170;
 
+let text;
+let prevTime = 0;
+
 // let
 //  taken from paper.js docs http://paperjs.org/tutorials/getting-started/using-javascript-directly/
 paper.install(window);
