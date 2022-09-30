@@ -1,3 +1,6 @@
+html {
+  cursor: none;
+}
 html,
 body {
   margin: 0;
