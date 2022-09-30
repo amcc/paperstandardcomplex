@@ -14,10 +14,13 @@ let wobble = 0;
 const wobbleInc = 0.019;
 const phaseInc = 0.0001;
 const zoffInc = 0.0006;
-const circleNumber = 4070;
+const circleNumber = 10000;
 
 let pathGroup;
 let pathsArray = [];
+
+let text;
+let prevTime = 0;
 
 // let
 //  taken from paper.js docs http://paperjs.org/tutorials/getting-started/using-javascript-directly/
@@ -29,6 +32,11 @@ window.onload = function () {
   paper.setup("myCanvas");
   let width = paper.view.size.width;
   let height = paper.view.size.height;
+
+  text = new PointText(new Point(200, 50));
+  text.justification = "center";
+  text.fillColor = "black";
+  text.content = "framerate";
 
   desiredLength = Math.min(width, height) * 2.2;
 
@@ -47,6 +55,8 @@ window.onload = function () {
 
   view.onFrame = function (event) {
     if (event.count % 2 === 0) {
+      text.content = "framerate = " + Math.floor(1 / (event.time - prevTime));
+      prevTime = event.time;
       // paper.project.activeLayer.removeChildren();
       wobble = 0;
       for (let i = 0; i < circleNumber; i++) {
@@ -124,7 +134,7 @@ const makeCircle = (
   path.strokeColor = "black";
   path.strokeWidth = stringWidth;
   path.closed = true;
-  path.smooth({ type: "continuous" });
+  path.smooth();
   // myPath.fullySelected = true;
 
   // if (!path.scaled) {
