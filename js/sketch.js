@@ -14,7 +14,10 @@ let wobble = 0;
 const wobbleInc = 0.019;
 const phaseInc = 0.0001;
 const zoffInc = 0.0006;
-const circleNumber = 170;
+const circleNumber = 4070;
+
+let pathGroup;
+let pathsArray = [];
 
 // let
 //  taken from paper.js docs http://paperjs.org/tutorials/getting-started/using-javascript-directly/
@@ -29,24 +32,44 @@ window.onload = function () {
 
   desiredLength = Math.min(width, height) * 2.2;
 
-  makeCircle(width, height, wobble, true);
+  for (let i = 0; i < circleNumber; i++) {
+    let path = new paper.Path();
+
+    path.applyMatrix = false;
+
+    path.strokeColor = "black";
+    path.strokeWidth = stringWidth;
+
+    pathsArray[i] = path;
+    makeCircle(path, width, height, wobble, true, true);
+    wobble += wobbleInc;
+  }
+
   view.onFrame = function (event) {
     if (event.count % 2 === 0) {
-      paper.project.activeLayer.removeChildren();
+      // paper.project.activeLayer.removeChildren();
       wobble = 0;
-      for (let x = 0; x < circleNumber; x++) {
-        makeCircle(width, height, wobble, true);
+      for (let i = 0; i < circleNumber; i++) {
+        makeCircle(pathsArray[i], width, height, wobble, true);
         wobble += wobbleInc;
       }
       phase += phaseInc;
       zoff += zoffInc;
+      // console.log(paper);
     }
   };
   // if not doing animation then use this to draw
   //view.draw();
 };
 
-const makeCircle = (width, height, wobble, close = false) => {
+const makeCircle = (
+  path,
+  width,
+  height,
+  wobble,
+  close = false,
+  create = false
+) => {
   const gap = close ? 0 : stringGap;
 
   circumference = 0;
@@ -88,20 +111,35 @@ const makeCircle = (width, height, wobble, close = false) => {
     prevX = x;
     prevY = y;
   }
-  var myPath = new paper.Path();
-  myPath.strokeColor = "black";
-  myPath.strokeWidth = stringWidth;
 
-  // p5.scale(desiredLength / circumference);
-  // p5.beginShape();
-  shapeArray.forEach((point) =>
-    myPath.add(new Point(point[0] + width / 2, point[1] + height / 2))
-  );
+  create
+    ? shapeArray.forEach((point) => {
+        path.add(new Point(point[0] + width / 2, point[1] + height / 2));
+      })
+    : path.segments.forEach((segment, i) => {
+        segment.point.x = shapeArray[i][0] + width / 2;
+        segment.point.y = shapeArray[i][1] + height / 2;
+      });
 
-  myPath.closed = true;
-  myPath.smooth();
+  path.strokeColor = "black";
+  path.strokeWidth = stringWidth;
+  path.closed = true;
+  path.smooth({ type: "continuous" });
   // myPath.fullySelected = true;
-  myPath.scale(desiredLength / circumference);
+
+  // if (!path.scaled) {
+  if (!path.prevCircumference) {
+    path.scale(desiredLength / circumference);
+  } else {
+    path.scale(path.prevCircumference / circumference);
+  }
+
+  path.prevCircumference = circumference;
+  // path.scale(desiredLength / circumference);
+
+  //   path.scaled = true;
+  // }
+
   // close ? p5.endShape(p5.CLOSE) : p5.endShape();
 };
 
