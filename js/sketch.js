@@ -6,15 +6,15 @@ let circumference;
 let desiredLength;
 
 const radDivisions = 14;
-const stringWidth = 0.8;
+const stringWidth = 1;
 const stringGap = 8;
 
 let phase = 0;
 let wobble = 0;
-const wobbleInc = 0.019;
+const wobbleInc = 0.011;
 const phaseInc = 0.0001;
 const zoffInc = 0.0006;
-const circleNumber = 10000;
+const circleNumber = 300;
 
 let pathGroup;
 let pathsArray = [];
