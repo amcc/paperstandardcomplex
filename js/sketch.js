@@ -16,6 +16,8 @@ const phaseInc = 0.0001;
 const zoffInc = 0.0006;
 const circleNumber = 170;
 
+let circleGroup;
+
 let text;
 let prevTime = 0;
 
@@ -32,10 +34,20 @@ window.onload = function () {
 
   desiredLength = Math.min(width, height) * 2.2;
 
-  makeCircle(width, height, wobble, true);
+  circleGroup = new paper.Group();
+  circleGroup.applyMatrix = false;
+
+  text = new PointText(new Point(200, 50));
+  text.justification = "center";
+  text.fillColor = "black";
+  text.content = "framerate";
+
   view.onFrame = function (event) {
     if (event.count % 2 === 0) {
-      paper.project.activeLayer.removeChildren();
+      text.content = "framerate = " + Math.floor(1 / (event.time - prevTime));
+      prevTime = event.time;
+
+      circleGroup.removeChildren();
       wobble = 0;
       for (let x = 0; x < circleNumber; x++) {
         makeCircle(width, height, wobble, true);
@@ -92,6 +104,7 @@ const makeCircle = (width, height, wobble, close = false) => {
     prevY = y;
   }
   var myPath = new paper.Path();
+  myPath.parent = circleGroup;
   myPath.strokeColor = "black";
   myPath.strokeWidth = stringWidth;
 
